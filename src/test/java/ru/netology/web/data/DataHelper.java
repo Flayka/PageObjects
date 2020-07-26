@@ -36,10 +36,10 @@ public class DataHelper {
     }
 
     public static CardInfo getCardInfoFromCard1() {
-        return new CardInfo("5559_0000_0000_0001", "1500");
+        return new CardInfo("5559_0000_0000_0001", "1000");
     }
 
     public static CardInfo getCardInfoFromCard2() {
-        return new CardInfo("5559_0000_0000_0002", "3500");
+        return new CardInfo("5559_0000_0000_0002", "2000");
     }
 }

@@ -27,16 +27,33 @@ class MoneyTransferTest {
         val infoFrom1To2 = DataHelper.getCardInfoFromCard2();
         cardPageReplenish.replenishCard1ToCard2(infoFrom1To2);
         val cardPageAfter = new CardPage();
-        assertEquals( balanceBegin + 3500, cardPageAfter.getCard1Balance());
+        assertEquals(balanceBegin + 2000, cardPageAfter.getCard1Balance());
     }
 
+    @Test
+    void shouldTransferMoneyFromCard1ToCard2() {
+        open("http://localhost:9999");
+        val loginPage = new LoginPageV2();
+        val authInfo = DataHelper.getAuthInfo();
+        val verificationPage = loginPage.validLogin(authInfo);
+        val verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+        verificationPage.validVerify(verificationCode);
 
+        val cardPage = new CardPage();
+        int balanceBegin = cardPage.getCard2Balance();
+        cardPage.card2Replenish();
+
+        val cardPageReplenish = new CardPageReplenish();
+        val infoFrom2To1 = DataHelper.getCardInfoFromCard1();
+        cardPageReplenish.replenishCard2ToCard1(infoFrom2To1);
+        val cardPageAfter = new CardPage();
+        assertEquals(balanceBegin + 1000, cardPageAfter.getCard2Balance());
+    }
 
     @Test
     void shouldTransferMoneyBetweenOwnCardsV1() {
         open("http://localhost:9999");
         val loginPage = new LoginPageV1();
-//    val loginPage = open("http://localhost:9999", LoginPageV1.class);
         val authInfo = DataHelper.getAuthInfo();
         val verificationPage = loginPage.validLogin(authInfo);
         val verificationCode = DataHelper.getVerificationCodeFor(authInfo);
