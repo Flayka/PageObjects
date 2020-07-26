@@ -24,12 +24,14 @@ public class CardPage {
         cardPage.shouldBe(visible);
     }
 
-    public void card1Replenish() {
+    public CardPageReplenish card1Replenish() {
         replenishCard1.click();
+        return new CardPageReplenish();
     }
 
-    public void card2Replenish() {
+    public CardPageReplenish card2Replenish() {
         replenishCard2.click();
+        return new CardPageReplenish();
     }
 
     public int getCard1Balance() {
