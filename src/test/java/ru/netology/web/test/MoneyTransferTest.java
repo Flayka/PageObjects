@@ -23,7 +23,7 @@ class MoneyTransferTest {
         int balanceBeginCard2 = cardPage.getCard2Balance();
         val cardPageReplenish = cardPage.card1Replenish();
         val infoFrom1To2 = DataHelper.getCardInfoFromCard2();
-        cardPageReplenish.replenishCard1ToCard2(infoFrom1To2, sum);
+        cardPageReplenish.replenishCardToCard(infoFrom1To2, sum);
         assertEquals(balanceBeginCard1 + Integer.parseInt(sum), cardPage.getCard1Balance());
         assertEquals(balanceBeginCard2 - Integer.parseInt(sum), cardPage.getCard2Balance());
     }
@@ -40,9 +40,37 @@ class MoneyTransferTest {
         int balanceBeginCard2 = cardPage.getCard2Balance();
         val cardPageReplenish = cardPage.card2Replenish();
         val infoFrom2To1 = DataHelper.getCardInfoFromCard1();
-        cardPageReplenish.replenishCard2ToCard1(infoFrom2To1, sum);
+        cardPageReplenish.replenishCardToCard(infoFrom2To1, sum);
         val cardPageAfter = new CardPage();
         assertEquals(balanceBeginCard2 + Integer.parseInt(sum), cardPageAfter.getCard2Balance());
         assertEquals(balanceBeginCard1 - Integer.parseInt(sum), cardPage.getCard1Balance());
+    }
+
+    @Test
+    void shouldErrorMessageAppearIfBalanceBelowZero() {
+        String sum = "21000";
+        val loginPage = open("http://localhost:9999", LoginPage.class);
+        val authInfo = DataHelper.getAuthInfo();
+        val verificationPage = loginPage.validLogin(authInfo);
+        val verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+        val cardPage = verificationPage.validVerify(verificationCode);
+        val cardPageReplenish = cardPage.card1Replenish();
+        val infoFrom1To2 = DataHelper.getCardInfoFromCard2();
+        cardPageReplenish.replenishCardToCard(infoFrom1To2, sum);
+        assertEquals("Недостаточно средств на карте.", cardPageReplenish.errorNotificationAppear());
+    }
+
+    @Test
+    void shouldErrorMessageAppearIfUseWrongCard() {
+        String sum = "2000";
+        val loginPage = open("http://localhost:9999", LoginPage.class);
+        val authInfo = DataHelper.getAuthInfo();
+        val verificationPage = loginPage.validLogin(authInfo);
+        val verificationCode = DataHelper.getVerificationCodeFor(authInfo);
+        val cardPage = verificationPage.validVerify(verificationCode);
+        val cardPageReplenish = cardPage.card2Replenish();
+        val infoFrom3To1 = DataHelper.getCardInfoFromCard3();
+        cardPageReplenish.replenishCardToCard(infoFrom3To1, sum);
+        assertEquals("Проверьте правильность ввода номера карты.", cardPageReplenish.errorNotificationAppear());
     }
 }

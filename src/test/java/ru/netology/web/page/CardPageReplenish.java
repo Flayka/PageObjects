@@ -11,20 +11,21 @@ public class CardPageReplenish {
     private SelenideElement cardFrom = $("[data-test-id='from'] .input__control");
     private SelenideElement replenish = $("[data-test-id='action-transfer']");
     private SelenideElement cardPageReplenish = $("[data-test-id='dashboard']");
+    private SelenideElement errorNotification = $("[data-test-id='error-notification'] .notification__content");
 
     public CardPageReplenish() {
         cardPageReplenish.shouldBe(visible);
     }
 
-    public void replenishCard1ToCard2(DataHelper.CardInfo cardInfo, String sum) {
+    public void replenishCardToCard(DataHelper.CardInfo cardInfo, String sum) {
         sumField.setValue(sum);
         cardFrom.setValue(cardInfo.getCardFrom());
         replenish.click();
     }
 
-    public void replenishCard2ToCard1(DataHelper.CardInfo card2ToCard1, String sum) {
-        sumField.setValue(sum);
-        cardFrom.setValue(card2ToCard1.getCardFrom());
-        replenish.click();
+    public String errorNotificationAppear() {
+        errorNotification.shouldBe(visible);
+        String text = errorNotification.getText();
+        return text;
     }
 }
